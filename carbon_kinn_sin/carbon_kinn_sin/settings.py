@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework_simplejwt',
     'auth_app',
+    'contact_app'
 ]
 
 MIDDLEWARE = [
