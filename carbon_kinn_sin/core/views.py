@@ -1,36 +1,31 @@
-from rest_framework import viewsets
-from .models import StickerType, Sticker
-from .serializers import StickerTypeSerializer, StickerSerializer
-from rest_framework import permissions
+from rest_framework import viewsets, permissions
+from .models import StickerCollection, Reward
+from .serializers import StickerCollectionSerializer, RewardSerializer
+from rest_framework.response import Response
+from django.db.models import Count
 
-class IsAdminUserOrReadOnly(permissions.BasePermission):
-    """
-    Custom permission to only allow admin users to edit objects.
-    All other users can view objects but not modify them.
-    """
+class StickerCollectionViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = StickerCollectionSerializer
+    queryset = StickerCollection.objects.all()
 
-    def has_permission(self, request, view):
-        if request.user and request.user.is_staff:
-            return True
-        # If the request method is safe (GET, HEAD, OPTIONS), allow access
-        return request.method in permissions.SAFE_METHODS
-      
-class StickerTypeViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for managing Sticker Types.
-    Only admin users can create, update, or delete sticker types.
-    """
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class LeaderboardViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request):
+        leaderboard = (
+            StickerCollection.objects
+            .values('user__name')
+            .annotate(sticker_count=Count('sticker'))
+            .order_by('-sticker_count')
+        )
+        
+        return Response({'leaderboard': leaderboard})
+
+class RewardViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
-    queryset = StickerType.objects.all()
-    serializer_class = StickerTypeSerializer
-
-
-class StickerViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for managing Stickers.
-    Admin users can create, update, or delete stickers,
-    while authenticated users can read the sticker data.
-    """
-    permission_classes = [IsAdminUserOrReadOnly]  
-    queryset = Sticker.objects.all()
-    serializer_class = StickerSerializer
+    queryset = Reward.objects.all()
+    serializer_class = RewardSerializer

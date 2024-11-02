@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import StickerType, Sticker
+from .models import StickerCollection, Reward
 
-class StickerTypeSerializer(serializers.ModelSerializer):
+class StickerCollectionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = StickerType
+        model = StickerCollection
         fields = '__all__'
 
-class StickerSerializer(serializers.ModelSerializer):
+class RewardSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Sticker
+        model = Reward
         fields = '__all__'
