@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'core',
     'auth_app',
-    'contact_app'
+    'contact_app',
+    'stickers'
 ]
 
 MIDDLEWARE = [
