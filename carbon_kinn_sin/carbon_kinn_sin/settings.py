@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-ow5y)!v5tlos=_1%-5p)rmy1*o&x&5dz+l9+8whdx0rkmbb_ou
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -84,8 +84,16 @@ WSGI_APPLICATION = 'carbon_kinn_sin.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'carbon_kinn_sin',
+        'USER': 'postgres',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',  
+        'PORT': '5432',     
+    }
 }
+
 
 
 # Password validation
